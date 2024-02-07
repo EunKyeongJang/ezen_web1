@@ -1,0 +1,9 @@
+{{>layouts/header}} <!--헤더파일 호출-->
+
+<form action="/articles/create" method="post">
+    제목 : <input name="title"/> <br/>
+    내용 : <textarea name="content"></textarea> <br/>
+    <button type="submit" method="post"></button>
+</form>
+
+{{>layouts/footer}}

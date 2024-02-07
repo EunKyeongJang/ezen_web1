@@ -17,10 +17,14 @@ repositories {
 }
 
 dependencies {	//여기에 외부 라이브러리 설치코드
+	//변경된 이후에 새로고침
 	implementation 'org.springframework.boot:spring-boot-starter-web'	//spring web
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'	//spring web test
 	runtimeOnly 'com.mysql:mysql-connector-j'	//mysql 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'//mustache : 화면뷰
+	//롬복
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
