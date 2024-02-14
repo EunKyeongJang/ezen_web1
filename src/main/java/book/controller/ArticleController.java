@@ -5,8 +5,13 @@ import book.dto.ArticleForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 //1. 스프링 컨테이너(메모리 저장소)에 빈(객체/힙) 등록 => 스프링이 해당 클래스를 사용할 수 있다
 //2. 모든 클라이언트 요청은 컨트롤러로 들어온다.
@@ -50,8 +55,48 @@ public class ArticleController {
         boolean result=articleDao.createArticle(form);
 
         return result;
+    }//m end
+
+    //p.156 조회
+        //[개별조회]
+        //1. 클라이언트가 서버(spring) 요청시 id 전달
+        //2. HTTP URL 이용한 요청 : /articles/1, /articles/2, /articles/3
+        //정해진 값이 아닌 매개변수일 경우에는 : /articles/{매개변수명}/{매개변수명}/{매개변수명}
+        //요청 : /articles / 1또는2또는3
+        //3. 서버(sprig) Controller 요청 URL 매핑/연결 받기
+        //4. @GetMapping("/articles/{매개변수}")
+        //5. 함수 매개변수에서 URL 상의 매개변수와 이름 일치
+        //6. 함수 매개변수 앞에 @PathVariable 어노테이션 주입
+            //@PathVariable : URL 요청으로 들어온 전달값을 컨트롤러 함수의 매개변수로 가져오는 어노테이션
+    @GetMapping("/articles/{id}")    //클라이언트 요청 예시 : /articles/1, /articles/2, /articles/3
+    public String show(@PathVariable Long id, Model model){      //id : 1  or id : 2  or  id : 3
+        System.out.println("id = " + id);
+        //p.159 1. 요청된 id를 가지고 DB에게 데이터 요청 [JSP 대신에 DAO]
+        ArticleForm form=articleDao.show(id);
+        System.out.println("form = " + form);
+        //p.160 2. DAO에게 전달받은 값을 뷰템플릿에게 전달하기 // model.addAttibute("키", "값")
+        model.addAttribute("article", form);
+        model.addAttribute("name", "유재석");
+        //{{model 속성명}}
+        //{{>파일경로}}
+        //p.161 3. 해당 함수가 종료될 떄 리턴값 1.화면/뷰 (머스테치,HTML)  2.값 (JSON)
+        return "articles/show";
+    }//m end
+
+    //p.170 조회
+        //[전체조회]
+    @GetMapping("/articles")
+    public String index(Model model){
+        //1. DAO에게 요청해서 데이터 가져온다.
+        List<ArticleForm> result=articleDao.index();
+        //2. p.175 뷰템프릿(머스테치)에게 전달할 값을 model에 담아준다.
+        model.addAttribute("articleList",result);
+        //3. p.185 뷰 페이지 설정
+        return "articles/index";
     }
-}
+
+
+}//c end
 /*
     자유도 떨어짐
 
