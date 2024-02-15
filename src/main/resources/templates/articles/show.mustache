@@ -1,5 +1,7 @@
 {{>layouts/header}}
-    {{name}}
+    <a href="/articles"> 목록보기(Go To Article List) </a> <br/>
+    <a href="/articles/{{article.id}}/edit"> 수정(edit) </a> <br/>
+    <a href="/articles/{{article.id}}/delete"> 삭제(delete) </a>
     <table border="1">
         <thead>
         <tr>

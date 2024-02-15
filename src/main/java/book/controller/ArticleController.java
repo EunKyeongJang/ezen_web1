@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,7 +30,8 @@ public class ArticleController {
     //2. 입력태그 속성의 name과 Dto 필드의 필드명 일치하면 자동 연결/대입 된다.
     //3. public 생성자 필요
     @PostMapping("/articles/create")    //HTTP요청경로 : POST방식 : localhost:8000/articles/create
-    public boolean createArticle(ArticleForm form){
+
+    public String createArticle(ArticleForm form){
         //soutm : 메소드명 출력
         System.out.println("ArticleController.createArticle");
         //soutp : 매소드 매개변수 출력
@@ -52,9 +50,10 @@ public class ArticleController {
         log.info(form.toString()); //자동완성 : 메뉴 -> 파일 -> 설정 ->pligIn -> 마켓플레이스
 
         //Dao 에게 요청하고 응답 받기
-        boolean result=articleDao.createArticle(form);
+        ArticleForm result=articleDao.createArticle(form);
 
-        return result;
+        return "redirect:/articles/"+result.getId();    //메소드로 이동 => url 재 요청
+        //return "articles/index";     : 템플릿 반환 => model이 없음(그냥 빈 mustache로 이동)
     }//m end
 
     //p.156 조회
@@ -76,7 +75,7 @@ public class ArticleController {
         System.out.println("form = " + form);
         //p.160 2. DAO에게 전달받은 값을 뷰템플릿에게 전달하기 // model.addAttibute("키", "값")
         model.addAttribute("article", form);
-        model.addAttribute("name", "유재석");
+        //model.addAttribute("name", "유재석");
         //{{model 속성명}}
         //{{>파일경로}}
         //p.161 3. 해당 함수가 종료될 떄 리턴값 1.화면/뷰 (머스테치,HTML)  2.값 (JSON)
@@ -95,6 +94,45 @@ public class ArticleController {
         return "articles/index";
     }
 
+    //p.202 수정 1단계 : 기존 데이터를 불러오기
+    @GetMapping("/articles/{id}/edit")    //이유 : <a> 이용해서 호출할 예정
+    public String edit(@PathVariable("id") long id, Model model){
+        System.out.println("id = " + id);
+        //1. dao에게 id 요청하고 응답 받는다.
+        ArticleForm form=articleDao.findById(id);
+        //2. 응답결과를 뷰 템플릿에게 보낼 준비 model
+        model.addAttribute("article", form);
+        //3. 뷰 페이지 설정
+        return "articles/edit";
+    }//m end
+    //@PathVariable("url매개변수") : 요청한 http url 경로상의 매개변수 대입
+        //url : /articles/{매개변수명}/edit      예시)/articles/1/edit
+        //JAVA 함수(@PathVariable("url 매개변수명") 타입 매개변수명)
+        //url 매개변수명 생략시 함수의 매개변수명과 일치할 경우 자동 대입
+
+    //p.214 수정2단계 : 수정 데이터 받아오기
+    @PostMapping("/article/update")//@PatchMapping @PutMapping
+    public String update(ArticleForm form){
+        //* form 입력 데이터를 Dto 매개변수로 받을때
+            //1. form 입력상자의 name과 Dto의 필드명 동일
+            //2. Dto의 필드값을 저장할 생성자 필요
+        System.out.println("form = " + form);
+        //2. Dao에게 요청하고 응답받기
+        ArticleForm updated= articleDao.update(form);
+        //3. 수정처리된 상세페이지로 이동
+        return "redirect:/articles/"+updated.getId();
+    }//m end
+
+    //p.234 : 삭제요청
+    @GetMapping("/articles/{id}/delete")
+    public String delete(@PathVariable long id){
+        System.out.println("id = " + id);
+        //1. 삭제할 대상
+        //2. Dao 삭제 요청하고 응답받기
+        boolean result= articleDao.delete(id);
+        //3. 결과 페이지로 리다이렉트 하기
+        return "redirect:/articles";
+    }
 
 }//c end
 /*

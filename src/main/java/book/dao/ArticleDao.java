@@ -30,24 +30,40 @@ public class ArticleDao {
     }
 
     //1. 등록
-    public boolean createArticle(ArticleForm form){
+    public ArticleForm createArticle(ArticleForm form){
         System.out.println("ArticleDao.createArticle");
+
+        //1. 성공 시 반환할 dto
+        ArticleForm saved=new ArticleForm();
+
         try{            //0. try{}catch (Exception e){}
             String sql="insert into article(title, content) value(?, ?)";   //1.
-            ps=conn.prepareStatement(sql);//2.
+            //ps=conn.prepareStatement(sql);//2.
+            //**insert된 auto_increment 자동번호 식별키 호출하는 방법
+            //1. sql 기재할때 자동으로 생성된 키 호출 선언
+            //2. ps.getGeneratedKeys(); 이용한 생성된 키 반환 
+            //3. rs.next() -------> rs.get타입(1) : 방금 생성된 키 반환
+            ps=conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, form.getTitle());//3.
             ps.setString(2, form.getContent());
-            int count=ps.executeUpdate();//4.
-            //5.
-            if(count==1){
-                return true;
+
+            int count=ps.executeUpdate();
+            
+            rs=ps.getGeneratedKeys();
+            if(rs.next()){
+                System.out.println("rs.getLong(1) = " + rs.getLong(1));
+                Long id= rs.getLong(1);
+
+                saved.setId(id);
+                saved.setTitle(form.getTitle());
+                saved.setContent(form.getContent());
+                return saved;
             }
         }
         catch (Exception e){
             System.out.println(e);
         }
-
-        return false;
+        return null;
     }//m end
 
     //2. 개별 글 조회 : 매개변수=조회할 게시물 번호(id)  /  반환=조회한 게시물 정보(DTO)
@@ -97,5 +113,64 @@ public class ArticleDao {
         return list;
     }//m end
 
+    //-----------------------------------------------------------//
+    //4. id에 해당하는 게시물 정보 호출, 매개변수 : id, 리턴 : dto
+    public ArticleForm findById(Long id){
+        try{
+            String sql="select * from article where id=?";
+            ps=conn.prepareStatement(sql);
+            ps.setLong(1, id);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                //* 하나의 레코드를 Dto 로 생성
+                return new ArticleForm(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3)
+                );
+            }
+        }
+        catch (Exception e){
+            System.out.println("e = " + e);
+        }
+        return null;    //오류이면 null
+    }//m end
+
+    //5. 수정처리, 매개변수 : 수정할 pk, 수정할 값들, return : dto
+    public ArticleForm update(ArticleForm form){
+        try{
+            String sql="update article set title=?, content=? where id=?";
+            ps=conn.prepareStatement(sql);
+            ps.setLong(3, form.getId());
+            ps.setString(1, form.getTitle());
+            ps.setString(2, form.getContent());
+
+            int count=ps.executeUpdate();
+            if(count==1){
+                return form;
+            }
+        }
+        catch (Exception e){
+            System.out.println("e = " + e);
+        }
+        return null;
+    }//m end
+
+    //6. 삭제처리, 매개변수 : 삭제할 id, 리턴 : T/F
+    public boolean delete(long id){
+        try{
+            String sql="delete from article where id=?";
+            ps=conn.prepareStatement(sql);
+            ps.setLong(1,id);
+            int count= ps.executeUpdate();
+            if(count==1){
+                return true;
+            }
+        }
+        catch (Exception e){
+            System.out.println("e = " + e);
+        }
+        return false;
+    }
 
 }//c end
