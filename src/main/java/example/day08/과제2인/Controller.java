@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ public class Controller {
     @Autowired
     Dao dao;
 
+    //저장
     @PostMapping("/item/input")
     @ResponseBody
     public Boolean input(Dto dto){
@@ -21,22 +23,24 @@ public class Controller {
         return dao.input(dto);
     }//m end
 
+    //전체호출
     @GetMapping("/item")
-    public String pageView(Model model){
+    @ResponseBody
+    public ArrayList<Dto> pageView(){
         System.out.println("Controller.pageView");
         ArrayList<Dto> list = dao.pageView();
-        model.addAttribute("item",list);
 
-
-        return "/item/index";
+        return list;
     }
 
+    //삭제
     @PostMapping("/item/delete")
     @ResponseBody
     public boolean itemDelete(Dto dto){
         return dao.itemDelete(dto);
     };
 
+    //수정
     @PostMapping("/item/itemUpdate")
     @ResponseBody
     public boolean itemUpdate(Dto dto){

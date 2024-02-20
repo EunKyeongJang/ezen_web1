@@ -107,7 +107,7 @@ public class Dao {
             }
         }
         catch (Exception e){
-
+            System.out.println("e = " + e);
         }
         return false;
     }
