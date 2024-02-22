@@ -39,7 +39,7 @@ public class Example2 {
             System.out.println("e = " + e);
         }
         workThreadA.work=false;
-        
+
         /*//4. 10초뒤에 A 작업스레드의 작업을 양보하기
         try{
             Thread.sleep(10000);
@@ -49,4 +49,4 @@ public class Example2 {
         }
         workThreadA.work=true;*/
     }
-}
+}//c end
