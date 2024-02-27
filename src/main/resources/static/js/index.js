@@ -13,17 +13,28 @@ $.ajax({
         let html="";
 
         if(r!=''){   //로그인 했을때
-            html+=`<li class="nav-item">
-                       <a class="nav-link" onclick="logout()">로그아웃</a>
-                   </li>
-                   <li class="nav-item">
-                       <a class="nav-link" href="#">내정보</a>
-                   </li>
-                   <li class="nav-item">
-                   <img src="#" />
-                       ${r}님
-                   </li>`;
-        }
+            $.ajax({
+                url : '/member/login/info',
+                method : 'get',
+                data : {id:r},
+                async : false,  //응답이 오기전까지 대기 상태
+                success : (r2) => {
+                    console.log(r2);
+                    console.log(r2.uuidFile);
+
+                     html+=`<li class="nav-item">
+                               <a class="nav-link" onclick="logout()">로그아웃</a>
+                           </li>
+                           <li class="nav-item">
+                               <a class="nav-link" href="#">내정보</a>
+                           </li>
+                           <li class="nav-item">
+                           <img src="/img/${r2.uuidFile}" />
+                               ${r}님
+                           </li>`;
+                }
+            });
+        }//if end
         else{       //로그인 안했을때
             html+=`<li class="nav-item">
                        <a class="nav-link" href="/member/login">로그인</a>
@@ -34,7 +45,7 @@ $.ajax({
         }
         //3. 대입
         login_menu.innerHTML=html;
-    }
+    }//s end
 }); //ajax end
 
 //2. 로그아웃

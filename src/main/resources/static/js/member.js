@@ -87,3 +87,45 @@ function login(){
     //4. 결과
 
 }
+
+/*
+onclick
+onchange
+*/
+
+function onChangeImg(event){
+   console.log('preimg');
+   console.log(event);  //현재 함수를 실행한 input
+   console.log(event.files); //현재 input의 첨부파일들
+   console.log(event.files[0]); //첨부파일들 중에서 첫번째 파일
+
+   //- input에 업로드된 파일을 바이트로 가져오기
+        //new FileReader() : 파일읽기 관련 메소드 제공
+   //1. 파일 읽기 객체 생성
+   let file = new FileReader();
+   //2. 파일 읽기 메소드
+   file.readAsDataURL(event.files[0]);
+   console.log(file);
+   console.log(file.result);
+   //3. 파일 inload 정의
+   file.onload=e => {
+       console.log(e);  //ProgressEvent
+       console.log(e.target);
+       console.log(e.target.result);    //여기에 읽어온 첨부파일 바이트
+       document.querySelector('#preimg').src = e.target.result;
+   }
+}//m end
+/*
+    함수 정의 방법
+    1. function 함수명(매개변수) {}
+    2. function (매개변수) {}
+        let 변수명 = function(매개변수) {}
+        let 변수명 = {
+            e : function(매개변수) {}
+        }
+
+    3. (매개변수) => {}
+        let 변수명 = (매개변수) => {}
+
+
+*/

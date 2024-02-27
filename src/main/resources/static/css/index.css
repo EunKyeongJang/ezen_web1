@@ -39,7 +39,7 @@ a{
 
 /*헤더 로고 이미지*/
 #head_logo > img{
-    width: 130px;
+    width: 100px;
 }
 
 .top_menu{
@@ -54,7 +54,19 @@ a{
 }
 #login_menu{
     display: flex;
+    align-items: center;
 }
 #login_menu > li{
     margin: 0 10px;
+}
+
+
+#preimg{
+    width: 300px;
+}
+
+/* 헤더 프로필 사진 nth-child */
+#login_menu > li:nth-child(3) > img {
+    width: 40px;
+    border-radius: 50%;
 }

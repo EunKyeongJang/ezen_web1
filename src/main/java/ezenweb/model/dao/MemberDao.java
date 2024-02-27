@@ -1,8 +1,10 @@
 package ezenweb.model.dao;
 
+import example.day05._1set컬렉션.Member;
 import ezenweb.model.dto.LoginDto;
 import ezenweb.model.dto.MemberDto;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Component
 public class MemberDao extends Dao{
@@ -49,5 +51,31 @@ public class MemberDao extends Dao{
             System.out.println("e = " + e);
         }
         return  false;
-    }
+    }//m end
+    
+    //회원정보 요청
+    public MemberDto doGetLoginInfo(String id){
+        MemberDto memberDto=null;
+        try{
+            String sql="select * from member where id=?";
+            ps=conn.prepareStatement(sql);
+            ps.setString(1, id);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                memberDto=new MemberDto(
+                    rs.getInt(1),rs.getString(2),
+                    null,   // 비밀번호 빼고
+                    rs.getString(4),rs.getString(5)
+                        ,rs.getString(6),
+                    null, //첨부파일 필드 빼고
+                    rs.getString(7)
+                );
+            }//if end
+        }//t end
+        catch (Exception e) {
+            System.out.println("e = " + e);
+        }
+        return memberDto;
+        
+    }//m end
 }

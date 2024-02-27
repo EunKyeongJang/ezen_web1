@@ -77,7 +77,9 @@ public class MemberController {
             //3. http 섹션 데이터 저장     .setAttribute("세션명", 데이터);  -- 자동변환(자 -> 부)
             //-. http 섹션 데이터 호출     .getAttribute("섹션 속성명");     -- 강제변환(부 -> 자)
             //-. htto 섹션 초기화         .invalidate()
+
         if(result) {    //만약에 로그인 성공이면 섹션 부여
+            //세션에 저장할 내용물들을 구성(식별키만)
             request.getSession().setAttribute("loginDto", loginDto.getId());   //loginDto : 3
         }
         return result;   //dao 요청 후 응답 결과 보내기
@@ -116,6 +118,14 @@ public class MemberController {
 
         return true;
         //로그아웃 성공 시  => 메인페이지 또는 로그인페이지로 이동
+    }
+
+
+    //3 ============ 회원정보 요청(로그인된 회원 요청, 패스워드 제외) ===============
+    @GetMapping("/member/login/info")
+    @ResponseBody
+    public MemberDto doGetLoginInfo(String id){
+        return memberService.doGetLoginInfo(id);
     }
 
 
