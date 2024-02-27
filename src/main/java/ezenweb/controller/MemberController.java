@@ -3,6 +3,8 @@ package ezenweb.controller;
 import ezenweb.model.dao.MemberDao;
 import ezenweb.model.dto.LoginDto;
 import ezenweb.model.dto.MemberDto;
+import ezenweb.service.MemberService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.UUID;
 
 @Controller
 public class MemberController {
@@ -21,6 +27,8 @@ public class MemberController {
 
     @Autowired
     MemberDao memberDao;
+    @Autowired
+    MemberService memberService;
 
     //================= 1. 회원가입 처리요청 =================
     @PostMapping("/member/signup")   //http://localhost:8000/member/signup
@@ -32,11 +40,16 @@ public class MemberController {
          */
         System.out.println("MemberController.signup");
         System.out.println("memberDto = " + memberDto);
-        //--dao
-        boolean result=memberDao.doPostSignup(memberDto); //dao처리
-        return result;  //dao 요청 후 응답 결과 보내기
-    }
+        //첨부파일 NultipartFile 타입
+        MultipartFile 첨부파일= memberDto.getImg();
+        System.out.println(첨부파일);                           //첨부파일이 들어있는 객체 주소
+        System.out.println(첨부파일.getSize());                 //첨부파일용량 : 30294
+        System.out.println(첨부파일.getContentType());          //image/png : 첨부파일의 확장자
+        System.out.println(첨부파일.getOriginalFilename());     //logo.png : 첨부파일의 이름(확장자 포함)
+        System.out.println(첨부파일.getName());                 //img : form input name
 
+        return memberService.doPostSignup(memberDto);  //dao 요청 후 응답 결과 보내기
+    }
 
     //*http 요청 서블릿 객체
     @Autowired

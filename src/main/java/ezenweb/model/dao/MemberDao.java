@@ -16,7 +16,7 @@ public class MemberDao extends Dao{
             ps.setString(3, memberDto.getName());
             ps.setString(4, memberDto.getEmail());
             ps.setString(5, memberDto.getPhone());
-            ps.setString(6, memberDto.getImg());
+            ps.setString(6, memberDto.getUuidFile());//null말고 다른값으로 바꿔야함
 
             int count=ps.executeUpdate();
 

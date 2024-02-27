@@ -3,30 +3,43 @@ console.log("member.js");
 //1. 회원가입
 function signup(){
     //1. 입력값 호출 입력값 호출 [document.querySelector()]
-    let id = document.querySelector('#id').value;             console.log(id);
+    //1. 데이터 하나씩 요청
+    /*let id = document.querySelector('#id').value;             console.log(id);
     let pw = document.querySelector('#pw').value;             console.log(pw);
     let name = document.querySelector('#name').value;         console.log(name);
     let phone = document.querySelector('#phone').value;       console.log(phone);
     let email = document.querySelector('#email').value;       console.log(email);
-    let img = document.querySelector('#img').value;           console.log(img);
-    //--유효성 검사
+    let img = document.querySelector('#img').value;           console.log(img);*/
+
 
     //2. 객체화 [let info={}]
-    let info={
-        id : id,
-        pw : pw,
-        name : name,
-        phone : phone,
-        email : email,
-        img : img
-    };
-    console.log(info);
+        /*let info={
+            id : id,
+            pw : pw,
+            name : name,
+            phone : phone,
+            email : email,
+            img : img
+        };
+        console.log(info);*/
+
+    //2. 폼 가져오기
+        let signUpForm=document.querySelectorAll('.signUpForm');
+    console.log(signUpForm);
+    let signUpFormData=new FormData(signUpForm[0]);
+            //FormData : 문자 데이터가 아닌 바이트 데이터로 변환(첨부파일 필수)
+    console.log(signUpFormData);
+    //--유효성 검사
+
+
 
     //3. 객체를 배열에 저장 ---> spring controller서버와 통신 [JQUERY AJAX]
     $.ajax({
             url : '/member/signup',
             method : 'POST',
-            data : info,
+            data : signUpFormData,
+            contentType : false,
+            processData : false,
             success : function (result){
                 console.log(result);
     //4. 결과
@@ -39,7 +52,7 @@ function signup(){
                 }
             }
         })//a end
-}
+}//m end
 
 //2. 로그인
 function login(){
