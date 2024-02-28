@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -161,6 +162,13 @@ public class MemberController {
         System.out.println("memberDto = " + memberDto);
         boolean result=true;
         return result;
+    }
+
+    //4. ==================아이디 중복 체크 요청==================
+    @GetMapping("/member/find/idcheck")
+    @ResponseBody
+    public boolean doGetFindIdCheck(@RequestParam String id){
+        return memberService.doGetFindIdCheck(id);
     }
 
 }//c end

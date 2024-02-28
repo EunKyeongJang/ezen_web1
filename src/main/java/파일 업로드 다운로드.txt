@@ -1,0 +1,9 @@
+첨부파일 전송 시
+1.폼 가져오기 : let signUpForm=document.querySelectorAll('.signUpForm');
+2. 폼 객체화 : let signUpFormData=new FormData(signUpForm);
+3. ajax 대용량 폼 전송 속성
+    data : ,
+    contentType : ,
+    processData : ,
+
+    (스프링) 컨트롤러에서 첨부파일 매핑할때 = MultipartFile(스프링에서 지원)
